@@ -1,0 +1,11 @@
+version = 0.1
+[default]
+[default.deploy]
+[default.deploy.parameters]
+stack_name = "groffery-store"
+s3_bucket = "aws-sam-cli-managed-bucket"
+s3_prefix = "groffery-store"
+region = "us-east-1"
+profile = "hack"
+confirm_changeset = true
+capabilities = "CAPABILITY_IAM"

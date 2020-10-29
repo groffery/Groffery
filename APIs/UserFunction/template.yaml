@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AWS
+
+  Sample SAM Template for AWS
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 30
+    VpcConfig:
+      SecurityGroupIds:
+        - sg-10a5702f
+      SubnetIds:
+        - subnet-38f35b67
+
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+
+Resources:
+  AddUserFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: AddUserFunction
+      Handler: adduser.AddUserHandler::handleRequest
+      Role: arn:aws:iam::421650769414:role/AWSLambdaFullAcessExecutionRole
+      Runtime: java11
+      MemorySize: 3008
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /user
+            Method: post
+  GetUserFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: GetUserFunction
+      Handler: getuser.GetUserHandler::handleRequest
+      Role: arn:aws:iam::421650769414:role/AWSLambdaFullAcessExecutionRole
+      Runtime: java11
+      MemorySize: 3008
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /user
+            Method: get
+
+
+Outputs:
+  AddUserFunction:
+    Description: "Add User Lambda Function ARN"
+    Value: !GetAtt AddUserFunction.Arn
+  GetUserFunction:
+    Description: "Get User Lambda Function ARN"
+    Value: !GetAtt GetUserFunction.Arn

@@ -1,0 +1,63 @@
+AWSTemplateFormatVersion: '2010-09-09'
+Transform: AWS::Serverless-2016-10-31
+Description: >
+  AWS
+
+  Sample SAM Template for AWS
+
+# More info about Globals: https://github.com/awslabs/serverless-application-model/blob/master/docs/globals.rst
+Globals:
+  Function:
+    Timeout: 30
+    VpcConfig:
+      SecurityGroupIds:
+        - sg-10a5702f
+      SubnetIds:
+        - subnet-38f35b67
+
+  Api:
+    Cors:
+      AllowMethods: "'*'"
+      AllowHeaders: "'*'"
+      AllowOrigin: "'*'"
+
+Resources:
+  AddStoreFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: AddStoreFunction
+      Handler: addstore.AddStoreHandler::handleRequest
+      Role: arn:aws:iam::421650769414:role/AWSLambdaFullAcessExecutionRole
+      Runtime: java11
+      MemorySize: 3008
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /store
+            Method: post
+  GetStoreFunction:
+    Type: AWS::Serverless::Function # More info about Function Resource: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#awsserverlessfunction
+    Properties:
+      CodeUri: GetStoreFunction
+      Handler: getstore.GetStoreHandler::handleRequest
+      Role: arn:aws:iam::421650769414:role/AWSLambdaFullAcessExecutionRole
+      Runtime: java11
+      MemorySize: 3008
+      Environment: # More info about Env Vars: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#environment-object
+      Events:
+        HelloWorld:
+          Type: Api # More info about API Event Source: https://github.com/awslabs/serverless-application-model/blob/master/versions/2016-10-31.md#api
+          Properties:
+            Path: /store
+            Method: get
+
+
+Outputs:
+  AddStoreFunction:
+    Description: "Add Store Lambda Function ARN"
+    Value: !GetAtt AddStoreFunction.Arn
+  GetStoreFunction:
+    Description: "Get Store Lambda Function ARN"
+    Value: !GetAtt GetStoreFunction.Arn
