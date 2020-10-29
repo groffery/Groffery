@@ -1,0 +1,26 @@
+import json
+import base64
+import boto3
+
+def lambda_handler(event, context):
+    s3 = boto3.client("s3")
+    
+    # For fetching bucket_name & file_name using proxy integration method from API Gateway
+    bucket_name = event["pathParameters"]["bucket"]
+    file_name = event["queryStringParameters"]["file"]
+    
+    URL = s3.generate_presigned_url("get_object", Params = {"Bucket": bucket_name, "Key": file_name, 'ResponseContentType': 'application/pdf'},  ExpiresIn=3600)
+    
+    print("bucket :", bucket_name)
+    print("file :", file_name)
+    
+    return {
+        "statusCode": 200,
+        "headers": {
+            "Content-Type": "application/json",
+            "Access-Control-Allow-Origin": "*",
+            "Access-Control-Allow-Methods": "*",
+            "Access-Control-Allow-Headers": "*"
+        },
+        "body": json.dumps({"URL": URL})
+        }
